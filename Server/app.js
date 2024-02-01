@@ -11,7 +11,11 @@ const express = require("express");
 const app = express();
 
 // Importing all the routes
-// const usersRouter = require("./routes/user");
+const usersRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
+
+
+
 
 
 app.use(cors({ origin: "*" }));
@@ -21,7 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Main routers
-// app.use("/user", usersRouter);
+app.use("/user", usersRouter);
+app.use("/auth", authRouter);
+
+
+
+
+
+
 
 // Error Handler
 app.use((err, req, res, next) => {
@@ -30,7 +41,6 @@ app.use((err, req, res, next) => {
   }
   next();
 });
-
 app.use("*", (req, res) => {
   return sendResponse(
     res,
@@ -38,8 +48,6 @@ app.use("*", (req, res) => {
     "Wrong URL, Please re-check your URL."
   );
 });
-
-
 databaseConnection(() => {
   app.listen(8000, () => {
     console.log("Server is running on port 8000");
