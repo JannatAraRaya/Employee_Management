@@ -29,6 +29,18 @@ const userSchema = new mongoose.Schema(
       default:"employee",
       required: false,
     },
+    ShiftAssigneed:[
+      {
+        type:mongoose.Types.ObjectId,
+        ref:"Shift"
+      }
+    ],
+    ShiftAssigner:[
+      {
+        type:mongoose.Types.ObjectId,
+        ref:"Shift"
+      }
+    ]
   },
   { timestamps: true }
 );

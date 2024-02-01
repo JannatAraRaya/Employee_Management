@@ -13,6 +13,7 @@ const app = express();
 // Importing all the routes
 const usersRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
+const shiftRouter = require("./routes/shift");
 
 
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 // Main routers
 app.use("/user", usersRouter);
 app.use("/auth", authRouter);
+app.use("/shift", shiftRouter);
 
 
 

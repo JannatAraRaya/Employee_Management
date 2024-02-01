@@ -56,6 +56,37 @@ class UserController {
       );
     }
   }
+  async viewOneByID(req,res){
+    try{
+      const{employeeId}= req.params;
+      const employee=await UserService.getEmployeeById(employeeId);
+      return sendResponse(res,HTTP_STATUS.OK,"Successfully get the employee data.",employee)
+    }catch (error) {
+      console.log(error);
+      return sendResponse(
+        res,
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        "Internal server error"
+      );
+    }
+  }
+  async view(req,res){
+    try{
+      const allEmployee= await UserService.getAllEmployee();
+      return sendResponse(res,HTTP_STATUS.OK,"Successfully fetched all employee data",{
+        result:allEmployee,
+        total:allEmployee.length
+      })
+
+    }catch (error) {
+      console.log(error);
+      return sendResponse(
+        res,
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        "Internal server error"
+      );
+    }
+  }
 }
 
 module.exports = new UserController();
