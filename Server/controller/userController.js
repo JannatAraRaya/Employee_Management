@@ -1,4 +1,5 @@
 const { sendResponse } = require("../utils/responseHandler");
+const { validationResult } = require("express-validator");
 const HTTP_STATUS = require("../constants/http_codes");
 const UserService = require("../service/userService");
 const AuthService = require("../service/authService");
@@ -6,6 +7,15 @@ const AuthService = require("../service/authService");
 class UserController {
   async create(req, res) {
     try {
+      const validation = validationResult(req).array();
+      if (validation.length > 0) {
+        return sendResponse(
+          res,
+          HTTP_STATUS.UNPROCESSABLE_ENTITY,
+          "Failed to add the user!",
+          validation
+        );
+      }
       const { username, email, password, phone, department, role } = req.body;
       const existingEmail = await UserService.existingEmail(email);
       if (existingEmail) {
@@ -31,9 +41,8 @@ class UserController {
         role
       );
       const userId = user._id;
-      console.log(userId)
       const authenticated = await AuthService.signup(username,email,password,userId,role);
-      console.log(authenticated)
+      
       if (user) {
         return sendResponse(
           res,
@@ -58,6 +67,15 @@ class UserController {
   }
   async viewOneByID(req,res){
     try{
+      const validation = validationResult(req).array();
+      if (validation.length > 0) {
+        return sendResponse(
+          res,
+          HTTP_STATUS.UNPROCESSABLE_ENTITY,
+          "Failed to get the employee Id",
+          validation
+        );
+      }
       const{employeeId}= req.params;
       const employee=await UserService.getEmployeeById(employeeId);
       return sendResponse(res,HTTP_STATUS.OK,"Successfully get the employee data.",employee)

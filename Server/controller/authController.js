@@ -1,10 +1,22 @@
 const { sendResponse } = require("../utils/responseHandler");
+const { validationResult } = require("express-validator");
 const HTTP_STATUS = require("../constants/http_codes");
 const AuthService = require("../service/authService");
 
 class AuthController {
   async login(req, res) {
     try {
+
+      const validation = validationResult(req).array();
+      if (validation.length > 0) {
+        return sendResponse(
+          res,
+          HTTP_STATUS.UNPROCESSABLE_ENTITY,
+          "Failed to add login data!",
+          validation
+        );
+      }
+
       const { email, password } = req.body;
       const responseAuth = await AuthService.login(email, password);
       if (responseAuth) {
@@ -24,9 +36,18 @@ class AuthController {
       );
     }
   }
-
   async resetPassword(req, res) {
     try {
+
+      const validation = validationResult(req).array();
+      if (validation.length > 0) {
+        return sendResponse(
+          res,
+          HTTP_STATUS.UNPROCESSABLE_ENTITY,
+          "Failed to add reset- password data!",
+          validation
+        );
+      }
       const { userId, token, newPassword, confirmPassword } = req.body;
       console.log(req.body);
 
@@ -49,13 +70,6 @@ class AuthController {
         HTTP_STATUS.UNPROCESSABLE_ENTITY,
         "Could not update password at this moment"
       );
-
-      // if (result) {
-      //     return sendResponse(res,HTTP_STATUS.OK,result.success )
-      // //   return res.status(200).json({ message: result.success });
-      // } else{
-      //     return sendResponse(res,HTTP_STATUS.BAD_REQUEST,result.error )
-      // }
     } catch (error) {
       console.log(error);
       return sendResponse(
@@ -68,3 +82,4 @@ class AuthController {
 }
 
 module.exports = new AuthController();
+ 
